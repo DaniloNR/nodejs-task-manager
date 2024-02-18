@@ -4,9 +4,9 @@ import { json } from "./middlewares/json.js";
 const server = http.createServer(async (req, res) => {
   await json(req, res);
 
-  res.writeHead(200).end();
+  return res.writeHead(200).end("response");
 
-  return res.writeHead(404).end();
+  // return res.writeHead(404).end();
 });
 
 server.listen(3333);
