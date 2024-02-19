@@ -20,9 +20,7 @@ export const routes = {
   POST: [
     {
       path: buildRoutePath("/tasks"),
-      handler: (req, res) => {
-        const { title, description } = req.body;
-
+      handler: ({ body: { title = null, description = null } }, res) => {
         const task = {
           id: randomUUID(),
           title,
