@@ -41,14 +41,21 @@ export const routes = {
   PUT: [
     {
       path: buildRoutePath("/tasks/:id"),
-      handler: ({ params: { id }, body: { title, description } }, res) => {
-        database.update("tasks", id, {
-          title,
-          description,
-          updated_at: new Date().toISOString(),
-        });
+      handler: (
+        { params: { id }, body: { title = null, description = null } },
+        res
+      ) => {
+        try {
+          database.update("tasks", id, {
+            title,
+            description,
+            updated_at: new Date().toISOString(),
+          });
 
-        return res.writeHead(204).end();
+          return res.writeHead(204).end();
+        } catch (error) {
+          return res.writeHead(404).end(String(error));
+        }
       },
     },
   ],
@@ -56,21 +63,27 @@ export const routes = {
     {
       path: buildRoutePath("/tasks/:id/complete"),
       handler: ({ params: { id } }, res) => {
-        database.update("tasks", id, {
-          completed_at: new Date().toISOString(),
-        });
-        return res.writeHead(204).end();
+        try {
+          database.update("tasks", id, {
+            completed_at: new Date().toISOString(),
+          });
+          return res.writeHead(204).end();
+        } catch (error) {
+          return res.writeHead(404).end(String(error));
+        }
       },
     },
   ],
   DELETE: [
     {
       path: buildRoutePath("/tasks/:id"),
-      handler: (req, res) => {
-        const { id } = req.params;
-        database.delete("tasks", id);
-
-        return res.writeHead(204).end();
+      handler: ({ params: { id } }, res) => {
+        try {
+          database.delete("tasks", id);
+          return res.writeHead(204).end();
+        } catch (error) {
+          return res.writeHead(404).end(String(error));
+        }
       },
     },
   ],
